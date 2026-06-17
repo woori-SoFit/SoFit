@@ -122,7 +122,8 @@ const { data, isLoading, isError } = useQuery({
 ) : null}
 ```
 		
-- **코드(스크립트) 링크**: BizDataPage.tsx, BizDashboardPage.tsx, serving/explainer.py, serving/advisor.py
+- **코드(스크립트) 링크**: [BizDataPage.tsx](https://github.com/woori-SoFit/SoFit/blob/9d4b17d94b6cb3c9c8d2f318cfc06820e032c460/frontend/user-front/src/pages/bizData/BizDataPage.tsx#L23), [BizDashboardPage.tsx](https://github.com/woori-SoFit/SoFit/blob/9d4b17d94b6cb3c9c8d2f318cfc06820e032c460/frontend/user-front/src/pages/bizData/BizDashboardPage.tsx#L210), [serving/explainer.py](https://github.com/woori-SoFit/SoFit/blob/9d4b17d94b6cb3c9c8d2f318cfc06820e032c460/ai/serving/explainer.py#L104), [serving/advisor.py](https://github.com/woori-SoFit/SoFit/blob/9d4b17d94b6cb3c9c8d2f318cfc06820e032c460/ai/serving/advisor.py#L87)
+
 
 
 
