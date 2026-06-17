@@ -39,6 +39,8 @@ GitHub Push 시 Jenkins가 빌드·테스트(SonarQube 포함) 후 ECR → CodeD
 
 
 ### 3-2. 통합 워크플로우 다이어그램
+<img width="3064" height="2638" alt="비즈니스 프로세스 모델-비즈니스프로세스 모델 최종" src="https://github.com/user-attachments/assets/414362a7-dbfc-4b95-8fe8-1660ca631fe0" />
+
 
 
 ### 3-3. 세부 기능 소개
