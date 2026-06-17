@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: sofit-user
+
+  # 활성 프로파일 (local / dev / test)
+  profiles:
+    active: test
+    include: common
+
+  # JPA (모듈별 override)
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+  mvc:
+    async:
+      request-timeout: -1
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+# External Mock 서버
+external:
+  mock:
+    url: ${EXTERNAL_MOCK_URL:http://localhost:9090}
+
+# CODEF API
+codef:
+  client-id: ${CODEF_CLIENT_ID:}
+  client-secret: ${CODEF_CLIENT_SECRET:}
+  base-url: ${CODEF_BASE_URL:https://development.codef.io}
+  oauth-url: ${CODEF_OAUTH_URL:https://oauth.codef.io/oauth/token}
+
+# AI Server
+sofit:
+  ai:
+    server:
+      url: ${AI_SERVER_URL:http://localhost:8000}
+
+# Monitoring — Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+  metrics:
+    tags:
+      application: sofit-user
+      env: prod

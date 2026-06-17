@@ -1,0 +1,40 @@
+plugins {
+	id 'org.springframework.boot'
+}
+
+// sofit-common은 라이브러리 모듈 — 실행 가능한 bootJar 불필요
+bootJar.enabled = false
+jar.enabled = true
+
+dependencies {
+	// JPA
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// Validation
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// Security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// Redis Session
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.session:spring-session-data-redis'
+
+	// AOP — 감사 로그 / 횡단 로깅 (@Aspect 프록시 지원)
+	implementation 'org.aspectj:aspectjweaver'
+
+    // Jackson
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+    // 구조화 로깅 (JSON) — Loki 검색용. logback-spring.xml의 dev/test/prod 프로파일에서 사용
+    implementation 'net.logstash.logback:logstash-logback-encoder:8.1'
+
+	// Lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// MySQL — Java 21 호환 버전으로 고정
+	runtimeOnly 'com.mysql:mysql-connector-j:8.3.0'
+
+
+}

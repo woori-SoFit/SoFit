@@ -1,0 +1,9 @@
+backend/build/
+backend/.gradle/
+backend/**/build/
+backend/.kiro/
+
+.DS_Store
+*.log
+.idea/
+.vscode/
