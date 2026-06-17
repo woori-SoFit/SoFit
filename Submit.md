@@ -45,12 +45,7 @@ GitHub Push 시 Jenkins가 빌드·테스트(SonarQube 포함) 후 ECR → CodeD
 
 ### 3-3. 세부 기능 소개
 
-#### [기능명]
-  - 기능 설명 : (해당 기능에 대한 설명을 작성해 주세요.)
-  - 핵심 코드(스크립트) : (코드 블록을 활용하여 핵심 코드(스크립트)를 기재해 주세요.)
-  - 코드 링크(스크립트 링크) : (해당 코드(스트립트)가 위치한 링크를 기재해 주세요.)
-
-### [기능 1] LightGBM 기반 성장 S등급 산출 및 SHAP + Gemini LLM 기반 성장 인사이트 생성
+#### [기능 1] LightGBM 기반 성장 S등급 산출 및 SHAP + Gemini LLM 기반 성장 인사이트 생성
 
 - **기능 설명**: 소상공인의 매출·거래·리뷰·상권 등 30개 피처를 입력으로 LightGBM 다중분류 모델이 성장 등급(S1~S10, S1이 최고)을 산출한다. 이후 SHAP(TreeExplainer / LightGBM `pred_contrib`)으로 "한 단계 위 등급"을 목표 클래스로 설정해 어떤 피처가 등급 상승에 기여(강점)하고 어떤 피처가 방해(개선 포인트)하는지 계산한 뒤, 그 결과를 Gemini LLM에 전달하여 소상공인이 이해할 수 있는 자연어 조언(`user_advice`)과 은행원이 심사에 참고할 수 있는 분석 텍스트(`admin_advice`)를 생성한다. 업력·경영주 경력처럼 사업자가 직접 바꿀 수 없는 피처는 개선 포인트에서 제외한다.
 
@@ -86,40 +81,42 @@ advice = response.text.strip()
 
 
 #### [기능 3] Redis Pub/Sub + SSE를 활용한 실시간 알림 시스템
-  - 기능 설명 : 대출 심사 완료·실행 등 주요 이벤트 발생 시, Redis Pub/Sub으로 메시지를 브로드캐스트하고 SSE(Server-Sent Events)를 통해 클라이언트에게 실시간 푸시 알림을 전달합니다. <br> 서버 이중화(스케일아웃) 환경에서도 모든 인스턴스가 Redis 채널을 구독하여 해당 유저의 SSE 연결을 보유한 인스턴스에서만 전송하는 구조로, 단일 장애 지점 없이 실시간 알림을 보장합니다.
-  - 핵심 코드(스크립트) : 
-    ```java
-    // Redis Pub/Sub 수신 → SSE 전달 (RedisNotificationSubscriber.java)
-    @Override
-    public void onMessage(Message message, byte[] pattern) {
-        NotificationPushRequest request = notificationSerializer.deserialize(message.getBody());
-        sseEmitterManager.send(request.getUserId(), request);
-    }
+  - **기능 설명** : 대출 심사 완료·실행 등 주요 이벤트 발생 시, Redis Pub/Sub으로 메시지를 브로드캐스트하고 SSE(Server-Sent Events)를 통해 클라이언트에게 실시간 푸시 알림을 전달합니다. <br> 서버 이중화(스케일아웃) 환경에서도 모든 인스턴스가 Redis 채널을 구독하여 해당 유저의 SSE 연결을 보유한 인스턴스에서만 전송하는 구조로, 단일 장애 지점 없이 실시간 알림을 보장합니다.
+  - **핵심 코드(스크립트)** :
+ 
+  ```java
+  // Redis Pub/Sub 수신 → SSE 전달 (RedisNotificationSubscriber.java)
+  @Override
+  public void onMessage(Message message, byte[] pattern) {
+      NotificationPushRequest request = notificationSerializer.deserialize(message.getBody());
+      sseEmitterManager.send(request.getUserId(), request);
+  }
 
-    // SSE emitter 등록 (SseEmitterManager.java)
-    public SseEmitter subscribe(Long userId) {
-        SseEmitter emitter = new SseEmitter(TIMEOUT);
-        emitters.put(userId, emitter);
-        emitter.onCompletion(() -> emitters.remove(userId, emitter));
-        emitter.onTimeout(() -> emitters.remove(userId, emitter));
-        // ...
-        return emitter;
-    }
+  // SSE emitter 등록 (SseEmitterManager.java)
+  public SseEmitter subscribe(Long userId) {
+      SseEmitter emitter = new SseEmitter(TIMEOUT);
+      emitters.put(userId, emitter);
+      emitter.onCompletion(() -> emitters.remove(userId, emitter));
+      emitter.onTimeout(() -> emitters.remove(userId, emitter));
+      // ...
+      return emitter;
+  }
 
-    // SSE 전송 (SseEmitterManager.java)
-    public void send(Long userId, NotificationPushRequest payload) {
-        SseEmitter emitter = emitters.get(userId);
-        if (emitter == null) return;
-        emitter.send(SseEmitter.event().name("notification").data(payload));
-    }
-    ```
+  // SSE 전송 (SseEmitterManager.java)
+  public void send(Long userId, NotificationPushRequest payload) {
+      SseEmitter emitter = emitters.get(userId);
+      if (emitter == null) return;
+      emitter.send(SseEmitter.event().name("notification").data(payload));
+  }
+  ```
   - 코드 링크(스크립트 링크) : [notification/RedisNotificationSubscriber.java](https://github.com/woori-SoFit/SoFit/blob/9d4b17d94b6cb3c9c8d2f318cfc06820e032c460/backend/sofit-user/src/main/java/com/sofit/user/domain/notification/service/RedisNotificationSubscriber.java#L21),[notification/SseEmitterManager.java](https://github.com/woori-SoFit/SoFit/blob/9d4b17d94b6cb3c9c8d2f318cfc06820e032c460/backend/sofit-user/src/main/java/com/sofit/user/domain/notification/service/SseEmitterManager.java#L26)
 
-### [기능 4] Redis 세션 기반 로그인 보안
+#### [기능 4] Redis 세션 기반 로그인 보안
 - **기능 설명**: 세션 인증의 보안성을 세 가지 축으로 강화한다.
 ① 만료 정책: 슬라이딩 10분(Redis TTL 자동 갱신, 유휴 시 만료) + 절대 12시간(SessionValidationFilter에서 loginTime 체크)의 이중 구조 <br>
 ② 브루트포스 방어: Redis에 IP별(5회/15분) · 계정별(10회/30분) 실패 카운터를 두고 TTL로 자동 잠금 해제한다. <br>
 ③ 동시 로그인 제어는 새 로그인 시 기존 세션을 만료시켜 단일 세션을 유지한다 <br>
+
 
 - **핵심 코드(스크립트)**:
 
@@ -128,7 +125,6 @@ advice = response.text.strip()
 @EnableRedisIndexedHttpSession(maxInactiveIntervalInSeconds = 600)
 public class RedisSessionConfig { ... }
 ```
- - 코드 링크(스크립트 링크):
 
 ```java
 // SessionValidationFilter.java — 절대 만료 12시간
@@ -136,8 +132,27 @@ if (loginTime != null && loginTime.plusHours(12).isBefore(LocalDateTime.now())) 
     session.invalidate();
 }
 ```
+
+```java
+// LoginAttemptService.java — IP/계정별 잠금
+public boolean isBlocked(String loginId, String ipAddress) {
+    if (isIpBlocked(ipAddress)) return true;   // 5회 → 15분 잠금
+    return isAccountBlocked(loginId);           // 10회 → 30분 잠금
+}
+```
+
+```java
+// SecurityConfig.java — 동시 로그인: 새 로그인 시 기존 세션 만료
+.maximumSessions(1)
+.maxSessionsPreventsLogin(false)
+```
+
+- **코드(스크립트) 링크**: 
+[RedisSessionConfig.java](https://github.com/woori-SoFit/SoFit/blob/main/backend/sofit-user/src/main/java/com/sofit/user/global/config/RedisSessionConfig.java), [SessionValidationFilter.java](
+https://github.com/woori-SoFit/SoFit/blob/main/backend/sofit-user/src/main/java/com/sofit/user/global/filter/SessionValidationFilter.java), [LoginAttemptService.java](https://github.com/woori-SoFit/SoFit/blob/main/backend/sofit-user/src/main/java/com/sofit/user/domain/auth/service/LoginAttemptService.java)
+ 
   
-### [기능 5] FastAPI + Crontab으로 이중 배치 서빙 구조
+#### [기능 5] FastAPI + Crontab으로 이중 배치 서빙 구조
 
 - **기능 설명**: S등급 산출을 두 가지 흐름으로 분리해 서빙한다.
 ① **건별 산출**은 Spring BE가 회원가입 등 이벤트 시점에 FastAPI `/api/s-grade/predict`를 동기 호출해 즉시 결과를 반환한다.
