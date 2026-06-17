@@ -12,3 +12,9 @@ frontend/**/dist/
 frontend/**/build/
 frontend/**/.turbo/
 frontend/**/.next/
+ai/__pycache__/
+ai/.venv/
+ai/venv/
+ai/*.pyc
+ai/.ipynb_checkpoints/
+ai/.pytest_cache/
