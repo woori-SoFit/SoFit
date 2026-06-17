@@ -84,43 +84,43 @@ advice = response.text.strip()
 
 - **핵심 코드(스크립트)**:
 
-		```java
-		// BizDataPage.tsx - 데이터 연결 여부에 따른 분기 처리
-		export default function BizDataPage() {
-		  const { isLoggedIn, isLoading: isAuthLoading } = useMe();
-		
-		  const { data: isConnected, isLoading: isBizLoading } = useQuery({
-		    queryKey: ["mybiz", "status"],
-		    queryFn: checkMyBizConnected,
-		    enabled: isLoggedIn,
-		    staleTime: 1000 * 60,
-		  });
-		
-		  if (!isConnected) {
-		    return <IntroSection onButtonClick={() => navigate("/biz-data/collect")} />;
-		  }
-		  return <MenuHub />;
-		}
-		```
-		
-		```java
-		// BizDashboardPage.tsx - 카테고리별 상세 대시보드 라우팅
-		const { data, isLoading, isError } = useQuery({
-		  queryKey: BIZ_DATA_KEYS.dashboard(selectedMonth || undefined),
-		  queryFn: () => fetchMyBizDashboard(selectedMonth || undefined),
-		  staleTime: 5 * 60 * 1000,
-		});
-		
-		{category === "sales" ? (
-		  <SalesDashboard data={data} />
-		) : category === "profit" ? (
-		  <ProfitDashboard data={data} />
-		) : category === "customer" ? (
-		  <CustomerDashboard data={data} />
-		) : category === "industry" ? (
-		  <IndustryDashboard data={data} />
-		) : null}
-		```
+```java
+// BizDataPage.tsx - 데이터 연결 여부에 따른 분기 처리
+export default function BizDataPage() {
+  const { isLoggedIn, isLoading: isAuthLoading } = useMe();
+
+  const { data: isConnected, isLoading: isBizLoading } = useQuery({
+	queryKey: ["mybiz", "status"],
+	queryFn: checkMyBizConnected,
+	enabled: isLoggedIn,
+	staleTime: 1000 * 60,
+  });
+
+  if (!isConnected) {
+	return <IntroSection onButtonClick={() => navigate("/biz-data/collect")} />;
+  }
+  return <MenuHub />;
+}
+```
+
+```java
+// BizDashboardPage.tsx - 카테고리별 상세 대시보드 라우팅
+const { data, isLoading, isError } = useQuery({
+  queryKey: BIZ_DATA_KEYS.dashboard(selectedMonth || undefined),
+  queryFn: () => fetchMyBizDashboard(selectedMonth || undefined),
+  staleTime: 5 * 60 * 1000,
+});
+
+{category === "sales" ? (
+  <SalesDashboard data={data} />
+) : category === "profit" ? (
+  <ProfitDashboard data={data} />
+) : category === "customer" ? (
+  <CustomerDashboard data={data} />
+) : category === "industry" ? (
+  <IndustryDashboard data={data} />
+) : null}
+```
 		
 - **코드(스크립트) 링크**: BizDataPage.tsx, BizDashboardPage.tsx, serving/explainer.py, serving/advisor.py
 
