@@ -1,0 +1,175 @@
+@import "tailwindcss";
+
+/* ── 전체 앱 기반 스타일 ── */
+html,
+body,
+#root {
+  height: 100%;
+  background-color: #F8FAFC;
+}
+
+body {
+  font-family: "Pretendard Variable", "Pretendard", "Apple SD Gothic Neo", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 모바일 앱 컨테이너 — 최대 너비 430px, 중앙 정렬, 흰 배경 */
+#root {
+  display: flex;
+  justify-content: center;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100%;
+  background-color: #F8FAFC;
+  position: relative;
+  overflow-x: hidden;
+  box-shadow: 0 0 40px rgb(0 0 0 / 0.08);
+}
+
+/* 스크롤바 숨김 유틸 */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── 커스텀 애니메이션 ── */
+@keyframes fade-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes bounce-once {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out;
+}
+
+.animate-bounce-once {
+  animation: bounce-once 0.5s ease-out;
+}
+
+@keyframes floating {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-floating {
+  animation: floating 2s ease-in-out infinite;
+}
+
+@keyframes pulse-outer {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+@keyframes pulse-inner {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(0.91); }
+}
+
+@theme {
+  /* ── Brand Colors ── */
+  --color-primary: #0067ac;
+  --color-primary-light: #3389c4;
+  --color-primary-dark: #004f85;
+
+  --color-secondary: #00b4d8;
+  --color-secondary-light: #48cae4;
+  --color-secondary-dark: #0096b7;
+
+  /* ── Semantic Colors ── */
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+
+  /* ── Neutral ── */
+  --color-gray-50: #f8fafc;
+  --color-gray-100: #f1f5f9;
+  --color-gray-150: #e9eff5;
+  --color-gray-200: #e2e8f0;
+  --color-gray-300: #cbd5e1;
+  --color-gray-400: #94a3b8;
+  --color-gray-500: #64748b;
+  --color-gray-600: #475569;
+  --color-gray-700: #334155;
+  --color-gray-800: #1e293b;
+  --color-gray-900: #0f172a;
+
+  /* ── Background ── */
+  --color-bg-base: #F8FAFC;
+  --color-bg-surface: #ffffff;
+  --color-bg-muted: #eee;
+
+  /* ── Text ── */
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-disabled: #64748b;
+  --color-text-inverse: #ffffff;
+
+  /* ── Border ── */
+  --color-border-default: #e2e8f0;
+  --color-border-focus: #0067ac;
+
+  /* ── Typography ── */
+  --font-sans: "Pretendard Variable", "Pretendard", "Apple SD Gothic Neo", sans-serif;
+
+  --text-xs: 0.75rem;      /* 12px */
+  --text-sm: 0.815rem;     /* 13px */
+  --text-base: 1rem;       /* 16px */
+  --text-lg: 1.125rem;     /* 18px */
+  --text-xl: 1.25rem;      /* 20px */
+  --text-2xl: 1.5rem;      /* 24px */
+  --text-3xl: 1.875rem;    /* 30px */
+
+  /* ── Spacing ── */
+  --spacing-page-x: 1.5rem;  /* 모바일 좌우 여백 20px */
+
+  /* ── Border Radius ── */
+  --radius-sm: 0.375rem;   /* 6px */
+  --radius-md: 0.5rem;     /* 8px */
+  --radius-lg: 0.75rem;    /* 12px */
+  --radius-xl: 1rem;       /* 16px */
+  --radius-full: 9999px;
+
+  /* ── Shadow ── */
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-modal: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  /* ── Z-index ── */
+  --z-modal: 100;
+  --z-toast: 200;
+  --z-tooltip: 300;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%); }
+  50%, 100% { transform: translateX(200%); }
+}
+
+/* ── Recharts 포커스 테두리 제거 ── */
+.recharts-responsive-container,
+.recharts-responsive-container *,
+.recharts-wrapper,
+.recharts-surface {
+  outline: none !important;
+}
