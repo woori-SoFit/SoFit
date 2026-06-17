@@ -78,6 +78,52 @@ advice = response.text.strip()
 
 - **코드(스크립트) 링크**: [serving/predictor.py](https://github.com/woori-SoFit/SoFit/blob/9d4b17d94b6cb3c9c8d2f318cfc06820e032c460/ai/serving/predictor.py#L102), [serving/explainer.py](https://github.com/woori-SoFit/SoFit/blob/9d4b17d94b6cb3c9c8d2f318cfc06820e032c460/ai/serving/explainer.py#L104), [serving/advisor.py](https://github.com/woori-SoFit/SoFit/blob/9d4b17d94b6cb3c9c8d2f318cfc06820e032c460/ai/serving/advisor.py#L87)
 
+#### [기능 2] 마이 비즈 데이터 보고서
+
+- **기능 설명**: 소상공인 고객이 자신의 사업 데이터를 수집·연동한 뒤, 4개 카테고리(매출 분석, 손익 현황, 고객/온라인 활동, 업종/상권 비교)로 분류된 통합 대시보드를 월별로 조회할 수 있는 기능입니다. 
+
+- **핵심 코드(스크립트)**:
+
+		```java
+		// BizDataPage.tsx - 데이터 연결 여부에 따른 분기 처리
+		export default function BizDataPage() {
+		  const { isLoggedIn, isLoading: isAuthLoading } = useMe();
+		
+		  const { data: isConnected, isLoading: isBizLoading } = useQuery({
+		    queryKey: ["mybiz", "status"],
+		    queryFn: checkMyBizConnected,
+		    enabled: isLoggedIn,
+		    staleTime: 1000 * 60,
+		  });
+		
+		  if (!isConnected) {
+		    return <IntroSection onButtonClick={() => navigate("/biz-data/collect")} />;
+		  }
+		  return <MenuHub />;
+		}
+		```
+		
+		```java
+		// BizDashboardPage.tsx - 카테고리별 상세 대시보드 라우팅
+		const { data, isLoading, isError } = useQuery({
+		  queryKey: BIZ_DATA_KEYS.dashboard(selectedMonth || undefined),
+		  queryFn: () => fetchMyBizDashboard(selectedMonth || undefined),
+		  staleTime: 5 * 60 * 1000,
+		});
+		
+		{category === "sales" ? (
+		  <SalesDashboard data={data} />
+		) : category === "profit" ? (
+		  <ProfitDashboard data={data} />
+		) : category === "customer" ? (
+		  <CustomerDashboard data={data} />
+		) : category === "industry" ? (
+		  <IndustryDashboard data={data} />
+		) : null}
+		```
+		
+- **코드(스크립트) 링크**: BizDataPage.tsx, BizDashboardPage.tsx, serving/explainer.py, serving/advisor.py
+
 
 
 #### [기능 3] Redis Pub/Sub + SSE를 활용한 실시간 알림 시스템
